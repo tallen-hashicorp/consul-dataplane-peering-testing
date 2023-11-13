@@ -37,6 +37,11 @@ kubectl create secret generic consul-certs --namespace consul-dc1 \
 kubectl apply -n consul-dc1 -f standalone
 ```
 
+## Access Consul
+```bash
+kubectl -n consul-dc1 port-forward services/consul-http 8500:8500
+```
+
 ## Delete the deployment
 ```bash
 kubectl delete -n consul-dc1 -f standalone

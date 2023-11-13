@@ -30,3 +30,6 @@ data:
     auto_encrypt {
       allow_tls = true
     }
+
+    retry_join = ["consul-serf-lan.consul-dc1.svc:8301"]
+    bootstrap_expect = 3
