@@ -1,18 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: consul
+  name: fake-service
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: consul
+      app: fake-service
   template:
     metadata:
       labels:
-        app: consul
+        app: fake-service
     spec:
       containers:
+      - name: fake-service
+        image: nicholasjackson/fake-service:v0.26.0 
+        ports:
+        - containerPort: 9090
       - name: consul
         image: hashicorp/consul-enterprise
         volumeMounts:
@@ -29,7 +33,7 @@ spec:
         command:
           - "consul"
           - "agent"
-          - "-config-file=/consul/config/consul-config.hcl"
+          - "-config-dir=/consul/config/"
           - "-datacenter=dc1"
         ports:
         - containerPort: 8500  # Consul HTTP API
@@ -44,91 +48,23 @@ spec:
           secretName: consul-certs
       - name: config-volume
         configMap:
-          name: consul-server-config
+          name: consul-fake-service-config
           items:
           - key: consul-config.hcl
             path: consul-config.hcl
+          - key: service.hcl
+            path: service.hcl
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: consul-http
+  name: fake-service
   labels:
-    app: consul
+    app: fake-service
 spec:
   selector:
-    app: consul
+    app: fake-service
   ports:
   - protocol: TCP
-    port: 8500
-    targetPort: 8500
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-dns
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: UDP
-    port: 8600
-    targetPort: 8600
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-rpc
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: TCP
-    port: 8300
-    targetPort: 8300
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-serf-lan
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: TCP
-    port: 8301
-    targetPort: 8301
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-serf-wan
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: TCP
-    port: 8302
-    targetPort: 8302
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-https
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: TCP
-    port: 8502
-    targetPort: 8502
+    port: 9090
+    targetPort: 9090

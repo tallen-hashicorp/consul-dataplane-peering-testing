@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consul-fake-service-config
+data:
+  consul-config.hcl: |
+    data_dir = "/opt/consul"
+
+    server = false
+    
+    encrypt = "qDOPBEr+/oUVeOFQOnVypxwDaHzLrD+lvjo5vCEBbZ0="
+    
+    ui_config {
+      enabled = false
+    }
+
+    tls {
+      defaults {
+          ca_file = "/consul/certs/consul-agent-ca.pem"
+          cert_file = "/consul/certs/dc1-server-consul-0.pem"
+          key_file = "/consul/certs/dc1-server-consul-0-key.pem"
+
+          verify_incoming = true
+          verify_outgoing = true
+      }
+    }
+
+    auto_encrypt {
+      tls = true
+    }
+
+    retry_join = ["consul-serf-lan", "consul-rpc"]
+  service.hcl: |
+    service {
+      name = "fake-service"
+      id   = "fake-service"
+      port = 80
+    }

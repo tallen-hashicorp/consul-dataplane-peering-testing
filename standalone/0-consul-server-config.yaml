@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: consul-config
+  name: consul-server-config
 data:
   consul-config.hcl: |
     data_dir = "/opt/consul"
