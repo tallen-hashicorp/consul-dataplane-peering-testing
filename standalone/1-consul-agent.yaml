@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consul
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: consul
+  template:
+    metadata:
+      labels:
+        app: consul
+    spec:
+      containers:
+      - name: consul
+        image: hashicorp/consul-enterprise
+        volumeMounts:
+        - name: certs-volume
+          mountPath: /consul/certs
+        - name: config-volume
+          mountPath: /consul/config
+        env:
+        - name: CONSUL_LICENSE
+          valueFrom:
+            secretKeyRef:
+              name: consul-ent-license
+              key: key
+        command:
+          - "consul"
+          - "agent"
+          - "-config-file=/consul/config/consul-config.hcl"
+        ports:
+        - containerPort: 8500  # Consul HTTP API
+        - containerPort: 8600  # Consul DNS
+        - containerPort: 8300  # Consul server RPC
+        - containerPort: 8301  # Consul server serf LAN
+        - containerPort: 8302  # Consul server serf WAN
+        - containerPort: 8502  # Consul HTTPS API
+      volumes:
+      - name: certs-volume
+        secret:
+          secretName: consul-certs
+      - name: config-volume
+        configMap:
+          name: consul-config
+          items:
+          - key: consul-config.hcl
+            path: consul-config.hcl

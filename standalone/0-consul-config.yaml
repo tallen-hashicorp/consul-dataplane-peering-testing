@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consul-config
+data:
+  consul-config.hcl: |
+    datacenter = "dc1"
+    
+    data_dir = "/opt/consul"
+
+    server = true
+    
+    encrypt = "qDOPBEr+/oUVeOFQOnVypxwDaHzLrD+lvjo5vCEBbZ0="
+    
+    ui_config {
+      enabled = true
+    }
+
+    tls {
+      defaults {
+          ca_file = "/consul/certs/consul-agent-ca.pem"
+          cert_file = "/consul/certs/dc1-server-consul-0.pem"
+          key_file = "/consul/certs/dc1-server-consul-0-key.pem"
+
+          verify_incoming = true
+          verify_outgoing = true
+      }
+    }
+
+    auto_encrypt {
+      allow_tls = true
+    }
