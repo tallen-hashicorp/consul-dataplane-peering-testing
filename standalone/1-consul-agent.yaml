@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: consul
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: consul
@@ -37,11 +37,12 @@ spec:
           - "-datacenter=dc1"
         ports:
         - containerPort: 8500  # Consul HTTP API
+        - containerPort: 8501  # Consul HTTPs API
+        - containerPort: 8502  # Consul GRPC API
         - containerPort: 8600  # Consul DNS
         - containerPort: 8300  # Consul server RPC
         - containerPort: 8301  # Consul server serf LAN
         - containerPort: 8302  # Consul server serf WAN
-        - containerPort: 8502  # Consul GRPC API
       volumes:
       - name: certs-volume
         secret:
@@ -56,83 +57,47 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: consul-http
+  name: consul-service
   labels:
     app: consul
 spec:
   selector:
     app: consul
   ports:
-  - protocol: TCP
+  - name: http
+    protocol: TCP
     port: 8500
     targetPort: 8500
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-dns
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: UDP
-    port: 8600
-    targetPort: 8600
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-rpc
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: TCP
-    port: 8300
-    targetPort: 8300
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-serf-lan
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: TCP
-    port: 8301
-    targetPort: 8301
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-serf-wan
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: TCP
-    port: 8302
-    targetPort: 8302
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul-grpc
-  labels:
-    app: consul
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: TCP
+  - name: https
+    port: 8501
+    targetPort: 8501
+  - name: grpc
     port: 8502
     targetPort: 8502
+  - name: serflan-tcp
+    protocol: "TCP"
+    port: 8301
+    targetPort: 8301
+  - name: serflan-udp
+    protocol: "UDP"
+    port: 8301
+    targetPort: 8301
+  - name: serfwan-tcp
+    protocol: "TCP"
+    port: 8302
+    targetPort: 8302
+  - name: serfwan-udp
+    protocol: "UDP"
+    port: 8302
+    targetPort: 8302
+  - name: server
+    port: 8300
+    targetPort: 8300
+  - name: dns-tcp
+    protocol: "TCP"
+    port: 8600
+    targetPort: dns-tcp
+  - name: dns-udp
+    protocol: "UDP"
+    port: 8600
+    targetPort: dns-udp

@@ -14,9 +14,9 @@ data:
 
     bind_addr =  "0.0.0.0"
 
-    retry_join = ["consul-serf-lan.consul-dc1.svc:8301"]
+    retry_join = ["consul-service:8301"]
     
-    bootstrap_expect = 1
+    bootstrap_expect = 3
     
     ui_config {
       enabled = true
@@ -47,4 +47,8 @@ data:
 
     connect {
       enabled = true
+    }
+
+    peering {
+        enabled =  true
     }

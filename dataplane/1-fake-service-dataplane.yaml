@@ -29,9 +29,7 @@ spec:
         command:
           - "/usr/local/bin/dumb-init"
           - "/usr/local/bin/consul-dataplane"
-          - "-addresses=consul-rpc.consul-dc1.svc"
-          - "-addresses=consul-serf-lan.consul-dc1.svc"
-          - "-addresses=consul-grpc.consul-dc1.svc"
+          - "-addresses=consul-service.consul-dc1.svc"
           - "-service-node-name=fake-service-dataplane"
           - "-proxy-service-id=1"
           - "-ca-certs=/consul/certs/consul-agent-ca.pem"

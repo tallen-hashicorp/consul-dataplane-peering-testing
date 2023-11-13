@@ -48,7 +48,7 @@ kubectl apply -n consul-dc1 -f standalone
 ### Access Consul
 
 ```bash
-kubectl -n consul-dc1 port-forward services/consul-http 8500:8500
+kubectl -n consul-dc1 port-forward services/consul-service 8500:8500
 ```
 
 ### Delete the deployment
@@ -64,7 +64,7 @@ If you want to deploy quickly, use the following commands:
 ```bash
 ./scripts/0-standalone-dc1.sh
 sleep 2
-kubectl -n consul-dc1 port-forward services/consul-http 8500:8500
+kubectl -n consul-dc1 port-forward services/consul-service 8500:8500
 ```
 
 # Consul Dataplane
@@ -83,23 +83,17 @@ The Following diagram shows how Consul Dataplanes function wihtout mesh deployed
 
 TODO
 
-
-```bash
-apk add tcpdump
-tcpdump port 8502
 ```
- ./consul-dataplane -addresses=127.0.0.1 -service-node-name=fake-service-dataplane -proxy-service-id=1 -ca-certs=/Users/tyler.allen/Documents/projects/consul-dataplane-peering-testing/consul-agent-ca.pem
-
-
-
-          - "/usr/local/bin/dumb-init"
-          - "/usr/local/bin/consul-dataplane"
-          - "-addresses=consul-rpc.consul-dc1.svc"
-          - "-addresses=consul-serf-lan.consul-dc1.svc"
-          - "-addresses=consul-grpc.consul-dc1.svc"
-          - "-service-node-name=fake-service-dataplane"
-          - "-proxy-service-id=1"
-          - "-ca-certs=/consul/certs/consul-agent-ca.pem"
-          - "-ca-certs=/consul/certs/dc1-server-consul-0.pem"
-          - "-grpc-port=8502"
-          - "-log-level=trace"
+2023-11-13T20:25:53.913Z [DEBUG] consul-dataplane.server-connection-manager: backoff: retry after=9.637608871s
+2023-11-13T20:26:03.560Z [INFO]  consul-dataplane.server-connection-manager: trying to connect to a Consul server
+2023-11-13T20:26:03.560Z [TRACE] consul-dataplane.server-connection-manager: Watcher.nextServer: addrs=[10.108.169.129:8502]
+2023-11-13T20:26:03.572Z [DEBUG] consul-dataplane.server-connection-manager: Resolved DNS name: name=consul-service.consul-dc1.svc ip-addrs=["{10.108.169.129 }"]
+2023-11-13T20:26:03.573Z [INFO]  consul-dataplane.server-connection-manager: discovered Consul servers: addresses=[10.108.169.129:8502]
+2023-11-13T20:26:03.573Z [INFO]  consul-dataplane.server-connection-manager: current prioritized list of known Consul servers: addresses=[10.108.169.129:8502]
+2023-11-13T20:26:03.573Z [TRACE] consul-dataplane.server-connection-manager: Watcher.connect: addr=10.108.169.129:8502
+2023-11-13T20:26:03.573Z [DEBUG] consul-dataplane.server-connection-manager: switching to Consul server: address=10.108.169.129:8502
+2023-11-13T20:26:03.573Z [TRACE] consul-dataplane.server-connection-manager: Watcher.switchServer: to=10.108.169.129:8502
+2023-11-13T20:26:03.573Z [DEBUG] consul-dataplane.server-connection-manager: gRPC resolver failed to update connection address: error="bad resolver state"
+2023-11-13T20:26:03.573Z [ERROR] consul-dataplane.server-connection-manager: connection error: error="fetching supported dataplane features: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 10.108.169.129:8502: connect: connection refused\""
+2023-11-13T20:26:03.573Z [DEBUG] consul-dataplane.server-connection-manager: backoff: retry after=26.104267623s
+```

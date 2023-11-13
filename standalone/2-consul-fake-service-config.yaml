@@ -29,7 +29,7 @@ data:
       tls = true
     }
 
-    retry_join = ["consul-serf-lan", "consul-rpc"]
+    retry_join = ["consul-service"]
   service.hcl: |
     service {
       name = "fake-service"
