@@ -24,6 +24,7 @@ Consul can use TLS to verify the authenticity of servers and clients. To enable 
 Start by creating the CA on your admin instance, using the Consul CLI.
 
 ```bash
+consul tls ca create
 consul tls cert create -server -dc dc1 -domain consul
 kubectl create secret generic consul-certs --namespace consul-dc1 \
   --from-file=consul-agent-ca-key.pem=consul-agent-ca-key.pem \
@@ -47,6 +48,13 @@ kubectl -n consul-dc1 port-forward services/consul-http 8500:8500
 kubectl delete -n consul-dc1 -f standalone
 ```
 
+## Quick Deploy
+If you want to deploy quickly use the following commands
+```
+./scripts/0-standalone.sh
+sleep 2
+kubectl -n consul-dc1 port-forward services/consul-http 8500:8500
+```
 
 # Consul Dataplane
 This topic provides an overview of Consul Dataplane, a lightweight process for managing Envoy proxies. Consul Dataplane removes the need to run client agents on every node in a cluster for service discovery and service mesh. Instead, Consul deploys sidecar proxies that provide lower latency, support additional runtimes, and integrate with cloud infrastructure providers.
