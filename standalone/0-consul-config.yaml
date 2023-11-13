@@ -4,8 +4,6 @@ metadata:
   name: consul-config
 data:
   consul-config.hcl: |
-    datacenter = "dc1"
-    
     data_dir = "/opt/consul"
 
     server = true

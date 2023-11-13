@@ -62,7 +62,7 @@ kubectl delete -n consul-dc1 -f standalone
 If you want to deploy quickly, use the following commands:
 
 ```bash
-./scripts/0-standalone.sh
+./scripts/0-standalone-dc1.sh
 sleep 2
 kubectl -n consul-dc1 port-forward services/consul-http 8500:8500
 ```
@@ -78,3 +78,8 @@ Consul Dataplane manages Envoy proxies and leaves responsibility for other funct
 The following diagram shows how Consul Dataplanes facilitate service mesh in a Kubernetes-orchestrated environment.
 
 ![Consul Dataplane](./docs/assets.avif)
+
+The Following diagram shows how Consul Dataplanes function wihtout mesh deployed
+
+TODO
+

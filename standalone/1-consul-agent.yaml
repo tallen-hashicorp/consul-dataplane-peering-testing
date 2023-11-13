@@ -30,6 +30,7 @@ spec:
           - "consul"
           - "agent"
           - "-config-file=/consul/config/consul-config.hcl"
+          - "-datacenter=dc1"
         ports:
         - containerPort: 8500  # Consul HTTP API
         - containerPort: 8600  # Consul DNS
