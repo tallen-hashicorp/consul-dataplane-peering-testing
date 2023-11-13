@@ -7,14 +7,25 @@ data:
     data_dir = "/opt/consul"
 
     server = true
+
+    log_level = "TRACE"
     
     encrypt = "qDOPBEr+/oUVeOFQOnVypxwDaHzLrD+lvjo5vCEBbZ0="
+
+    bind_addr =  "0.0.0.0"
+
+    retry_join = ["consul-serf-lan.consul-dc1.svc:8301"]
+    
+    bootstrap_expect = 1
     
     ui_config {
       enabled = true
     }
 
     tls {
+      grpc {
+          verify_incoming = false
+      }
       defaults {
           ca_file = "/consul/certs/consul-agent-ca.pem"
           cert_file = "/consul/certs/dc1-server-consul-0.pem"
@@ -25,9 +36,15 @@ data:
       }
     }
 
+    ports {
+      grpc = -1
+      grpc_tls = 8502
+    }
+
     auto_encrypt {
       allow_tls = true
     }
 
-    retry_join = ["consul-serf-lan.consul-dc1.svc:8301"]
-    bootstrap_expect = 3
+    connect {
+      enabled = true
+    }

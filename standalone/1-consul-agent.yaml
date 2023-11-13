@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: consul
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: consul
@@ -15,6 +15,10 @@ spec:
       containers:
       - name: consul
         image: hashicorp/consul-enterprise
+        securityContext:
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
         volumeMounts:
         - name: certs-volume
           mountPath: /consul/certs
@@ -37,7 +41,7 @@ spec:
         - containerPort: 8300  # Consul server RPC
         - containerPort: 8301  # Consul server serf LAN
         - containerPort: 8302  # Consul server serf WAN
-        - containerPort: 8502  # Consul HTTPS API
+        - containerPort: 8502  # Consul GRPC API
       volumes:
       - name: certs-volume
         secret:
@@ -122,7 +126,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: consul-https
+  name: consul-grpc
   labels:
     app: consul
 spec:

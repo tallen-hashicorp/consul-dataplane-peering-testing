@@ -67,7 +67,7 @@ sleep 2
 kubectl -n consul-dc1 port-forward services/consul-http 8500:8500
 ```
 
-## Consul Dataplane
+# Consul Dataplane
 
 This topic provides an overview of Consul Dataplane, a lightweight process for managing Envoy proxies. Consul Dataplane removes the need to run client agents on every node in a cluster for service discovery and service mesh. Instead, Consul deploys sidecar proxies that provide lower latency, support additional runtimes, and integrate with cloud infrastructure providers.
 
@@ -83,3 +83,23 @@ The Following diagram shows how Consul Dataplanes function wihtout mesh deployed
 
 TODO
 
+
+```bash
+apk add tcpdump
+tcpdump port 8502
+```
+ ./consul-dataplane -addresses=127.0.0.1 -service-node-name=fake-service-dataplane -proxy-service-id=1 -ca-certs=/Users/tyler.allen/Documents/projects/consul-dataplane-peering-testing/consul-agent-ca.pem
+
+
+
+          - "/usr/local/bin/dumb-init"
+          - "/usr/local/bin/consul-dataplane"
+          - "-addresses=consul-rpc.consul-dc1.svc"
+          - "-addresses=consul-serf-lan.consul-dc1.svc"
+          - "-addresses=consul-grpc.consul-dc1.svc"
+          - "-service-node-name=fake-service-dataplane"
+          - "-proxy-service-id=1"
+          - "-ca-certs=/consul/certs/consul-agent-ca.pem"
+          - "-ca-certs=/consul/certs/dc1-server-consul-0.pem"
+          - "-grpc-port=8502"
+          - "-log-level=trace"
